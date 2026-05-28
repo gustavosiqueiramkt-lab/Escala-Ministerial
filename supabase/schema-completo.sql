@@ -1,7 +1,9 @@
 ﻿-- Schema completo do Escala Ministerial
--- Execute este arquivo no SQL Editor do Supabase
--- supabase.com -> SQL Editor -> New query -> cole e execute
-
+-- Gerado em: 2026-05-28 16:40
+-- Execute este arquivo no SQL Editor do Supabase (supabase.com -> SQL Editor -> New query)
+--
+-- NOTA: A migration 20260116145452 foi omitida pois continha apenas
+-- dados de teste do ambiente Lovable com IDs de usuários inexistentes.
 
 
 -- ============================================================
@@ -954,26 +956,8 @@ GRANT EXECUTE ON FUNCTION public.check_and_process_my_invites() TO authenticated
 
 
 -- ============================================================
--- Migration: 20260116145452_700a60bd-3f18-4a91-b6aa-7f27aa8a742a.sql
+-- OMITIDA (dados de teste): 20260116145452_700a60bd-3f18-4a91-b6aa-7f27aa8a742a.sql
 -- ============================================================
-
--- Vincular voluntÃ¡rios existentes Ã  organizaÃ§Ã£o
-UPDATE volunteers 
-SET organization_id = 'ffa292b2-363d-4dcd-b00b-63bf8cc224c6'
-WHERE organization_id IS NULL;
-
--- Criar voluntÃ¡rio para o owner (lÃ­der pode marcar prÃ³pria disponibilidade)
-INSERT INTO volunteers (name, role, user_id, organization_id, skills, instrument)
-VALUES 
-  ('LÃ­der Principal', 'vocalist', '27683b2e-93eb-4732-b94a-176681888a4f', 'ffa292b2-363d-4dcd-b00b-63bf8cc224c6', ARRAY['LÃ­der de Louvor', 'RegÃªncia'], NULL),
-  ('Ana Costa', 'vocalist', NULL, 'ffa292b2-363d-4dcd-b00b-63bf8cc224c6', ARRAY['Soprano', 'Backing Vocal'], NULL),
-  ('Pedro Santos', 'instrumentalist', NULL, 'ffa292b2-363d-4dcd-b00b-63bf8cc224c6', ARRAY['Acordes', 'Fingerstyle'], 'ViolÃ£o'),
-  ('Maria Oliveira', 'instrumentalist', NULL, 'ffa292b2-363d-4dcd-b00b-63bf8cc224c6', ARRAY['ClÃ¡ssico', 'ContemporÃ¢neo'], 'Teclado'),
-  ('JoÃ£o Silva', 'technician', NULL, 'ffa292b2-363d-4dcd-b00b-63bf8cc224c6', ARRAY['Mesa de Som', 'ProjeÃ§Ã£o'], NULL),
-  ('Lucas Ferreira', 'instrumentalist', NULL, 'ffa292b2-363d-4dcd-b00b-63bf8cc224c6', ARRAY['Rock', 'Gospel'], 'Bateria'),
-  ('Carla Mendes', 'vocalist', NULL, 'ffa292b2-363d-4dcd-b00b-63bf8cc224c6', ARRAY['Contralto', 'Solo'], NULL)
-ON CONFLICT DO NOTHING;
-
 
 
 -- ============================================================
