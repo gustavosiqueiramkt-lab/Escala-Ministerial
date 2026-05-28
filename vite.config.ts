@@ -91,18 +91,6 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          // Separa as libs pesadas em chunks próprios (carregados sob demanda)
-          "vendor-react": ["react", "react-dom", "react-router-dom"],
-          "vendor-supabase": ["@supabase/supabase-js"],
-          "vendor-query": ["@tanstack/react-query"],
-          "vendor-ui": ["lucide-react", "recharts"],
-          "vendor-form": ["react-hook-form", "@hookform/resolvers", "zod"],
-          "vendor-date": ["date-fns", "react-day-picker"],
-        },
-      },
-    },
+    chunkSizeWarningLimit: 1000,
   },
 }));
