@@ -1,0 +1,4 @@
+Price ID,Product ID,Product Name,Product Statement Descriptor,Product Tax Code,Description,Created (UTC),Amount,Currency,Interval,Interval Count,Usage Type,Aggregate Usage,Billing Scheme,Trial Period Days,Tax Behavior
+price_1TcY1aFCVNijyLLLC3M6u2Wp,prod_UblFaKeFCAvbc4,Cantivo Igreja,CANTIVO IGREJA,,,2026-05-29 21:33,157.00,brl,month,1,licensed,,per_unit,,unspecified
+price_1TcY1aFCVNijyLLLCiABA32M,prod_UblDrxRLQakLCw,Cantivo Essêncial,CANTIVO ESSENCIAL,,,2026-05-29 21:33,47.00,brl,month,1,licensed,,per_unit,,unspecified
+price_1TcY1VFCVNijyLLLL4WZz0Lp,prod_UblEkhJijKumam,Cantivo Ministério,CANTIVO MINISTERIO,,,2026-05-29 21:32,87.00,brl,month,1,licensed,,per_unit,,unspecified
