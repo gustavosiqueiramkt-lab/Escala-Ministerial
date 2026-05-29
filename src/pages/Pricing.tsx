@@ -73,6 +73,10 @@ export default function Pricing() {
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        toast.error('Sessão expirada. Faça login novamente.');
+        return;
+      }
       const { data, error } = await supabase.functions.invoke('create-checkout-session', {
         body: { planId: selectedPlanId, organizationId: organization?.id },
         headers: { Authorization: `Bearer ${session?.access_token}` },

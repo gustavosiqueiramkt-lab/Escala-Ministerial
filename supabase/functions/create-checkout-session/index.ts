@@ -25,6 +25,13 @@ Deno.serve(async (req) => {
 
     const { planId, organizationId } = await req.json();
 
+    if (!planId || !organizationId) {
+      return new Response(
+        JSON.stringify({ error: 'planId e organizationId são obrigatórios' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const { data: plan } = await supabase
       .from('plans')
       .select('stripe_price_id_monthly, name')
