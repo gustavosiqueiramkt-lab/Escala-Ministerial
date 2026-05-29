@@ -97,7 +97,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
             {!collapsed && (
               <div className="animate-fade-in min-w-0">
                 <h1 className="font-serif text-lg font-semibold text-sidebar-foreground truncate">
-                  {organization?.name || 'Escala Ministerial'}
+                  {organization?.name || 'Cantivo'}
                 </h1>
               </div>
             )}
