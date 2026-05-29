@@ -5,6 +5,7 @@ import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { SkillsOnboardingModal } from '@/components/onboarding/SkillsOnboardingModal';
+import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { useMyMemberSkills } from '@/hooks/useMemberSkills';
 import { useAuth } from '@/hooks/useAuth';
 import { useOrganization } from '@/hooks/useOrganization';
@@ -55,18 +56,21 @@ export function AppLayout({ children, title }: AppLayoutProps) {
 
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 glass border-b border-border/50 px-4 py-3">
-        <div className="flex items-center gap-3">
-          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="p-0 w-64">
-              <Sidebar collapsed={false} onToggle={() => {}} />
-            </SheetContent>
-          </Sheet>
-          <h1 className="font-serif text-lg font-semibold">{title}</h1>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="p-0 w-64">
+                <Sidebar collapsed={false} onToggle={() => {}} />
+              </SheetContent>
+            </Sheet>
+            <h1 className="font-serif text-lg font-semibold">{title}</h1>
+          </div>
+          <NotificationBell />
         </div>
       </div>
 
@@ -80,10 +84,11 @@ export function AppLayout({ children, title }: AppLayoutProps) {
         <div className="p-4 lg:p-8">
           {/* Desktop Title */}
           {title && (
-            <div className="hidden lg:block mb-6">
+            <div className="hidden lg:flex items-center justify-between mb-6">
               <h1 className="font-serif text-3xl font-semibold text-foreground">
                 {title}
               </h1>
+              <NotificationBell />
             </div>
           )}
           {children}
