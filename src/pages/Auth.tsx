@@ -56,8 +56,8 @@ export default function Auth() {
           <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-primary-foreground mb-4">
             <Music className="h-8 w-8" />
           </div>
-          <h1 className="font-display text-2xl font-bold">Escala Ministerial</h1>
-          <p className="text-muted-foreground text-sm mt-1">Gestão de louvor e técnica</p>
+          <h1 className="font-display text-2xl font-bold">Cantivo</h1>
+          <p className="text-muted-foreground text-sm mt-1">A escala que sua equipe vai amar usar.</p>
         </div>
 
         <Card className="card-elevated">

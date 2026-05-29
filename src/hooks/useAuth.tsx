@@ -15,6 +15,19 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+function translateAuthError(message: string): string {
+  const errors: Record<string, string> = {
+    'Email not confirmed': 'E-mail não confirmado. Verifique sua caixa de entrada e clique no link de ativação.',
+    'Invalid login credentials': 'E-mail ou senha incorretos.',
+    'User already registered': 'Este e-mail já está cadastrado. Tente fazer login.',
+    'Password should be at least 6 characters': 'A senha deve ter pelo menos 6 caracteres.',
+    'Unable to validate email address: invalid format': 'Formato de e-mail inválido.',
+    'Email rate limit exceeded': 'Muitas tentativas. Aguarde alguns minutos e tente novamente.',
+    'Too many requests': 'Muitas tentativas. Aguarde alguns minutos e tente novamente.',
+  };
+  return errors[message] ?? message;
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -41,7 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signUp = async (email: string, password: string, name: string) => {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -51,8 +64,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     if (error) {
-      toast.error(error.message);
+      toast.error(translateAuthError(error.message));
       throw error;
+    }
+
+    // Session null means email confirmation is required
+    if (!data.session) {
+      toast.info('Conta criada! Verifique seu e-mail e clique no link de confirmação para ativar sua conta.');
+      throw new Error('EMAIL_CONFIRMATION_REQUIRED');
     }
 
     toast.success('Conta criada com sucesso!');
@@ -65,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     if (error) {
-      toast.error(error.message);
+      toast.error(translateAuthError(error.message));
       throw error;
     }
 
