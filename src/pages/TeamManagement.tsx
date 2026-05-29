@@ -3,6 +3,9 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { useOrganizationMembers, useOrganization } from '@/hooks/useOrganization';
 import { useOrgRole } from '@/hooks/useOrgRole';
 import { useAuth } from '@/hooks/useAuth';
+import { usePlan } from '@/hooks/usePlan';
+import { canAddMember } from '@/lib/planLimits';
+import { UpgradePrompt } from '@/components/upgrade/UpgradePrompt';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -50,15 +53,25 @@ export default function TeamManagement() {
   const { organization } = useOrganization();
   const { isLeader, isOwner } = useOrgRole();
   const { members, isLoading, updateMemberRole, removeMember, inviteMember, pendingInvites, cancelInvite } = useOrganizationMembers();
-  
+  const { planId } = usePlan();
+
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState<'admin' | 'member'>('member');
   const [isInviteOpen, setIsInviteOpen] = useState(false);
   const [isInviting, setIsInviting] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
+
+  const handleInviteClick = () => {
+    if (!canAddMember(planId, members?.length ?? 0)) {
+      setShowUpgrade(true);
+      return;
+    }
+    setIsInviteOpen(true);
+  };
 
   const handleInvite = async () => {
     if (!inviteEmail) return;
-    
+
     setIsInviting(true);
     try {
       await inviteMember.mutateAsync({ email: inviteEmail, role: inviteRole });
@@ -110,7 +123,7 @@ export default function TeamManagement() {
           
           <Dialog open={isInviteOpen} onOpenChange={setIsInviteOpen}>
             <DialogTrigger asChild>
-              <Button>
+              <Button onClick={handleInviteClick}>
                 <UserPlus className="h-4 w-4 mr-2" />
                 Adicionar Membro
               </Button>
@@ -354,6 +367,12 @@ export default function TeamManagement() {
             </CardContent>
           </Card>
         )}
+
+        <UpgradePrompt
+          open={showUpgrade}
+          onOpenChange={setShowUpgrade}
+          reason="members"
+        />
       </div>
     </AppLayout>
   );

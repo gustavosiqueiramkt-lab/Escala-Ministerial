@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { MemberSelect } from '@/components/volunteers/MemberSelect';
 import { useSongs, Song } from '@/hooks/useSongs';
 import { useService, useCreateService, useUpdateService } from '@/hooks/useServices';
+import { useOrganization } from '@/hooks/useOrganization';
+import { usePlan } from '@/hooks/usePlan';
+import { canCreateCulto } from '@/lib/planLimits';
+import { UpgradePrompt } from '@/components/upgrade/UpgradePrompt';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -126,6 +132,8 @@ export default function ServiceCreate() {
   const [searchParams] = useSearchParams();
   const isEditing = !!id;
 
+  const { organization } = useOrganization();
+  const { planId } = usePlan();
   const { data: existingService } = useService(id || '');
   const { data: songs = [] } = useSongs();
   const createService = useCreateService();
@@ -139,6 +147,26 @@ export default function ServiceCreate() {
   const [addType, setAddType] = useState<'song' | 'moment'>('song');
   const [selectedSong, setSelectedSong] = useState('');
   const [momentTitle, setMomentTitle] = useState('');
+  const [showUpgrade, setShowUpgrade] = useState(false);
+
+  const { data: cultosThisMonth = 0 } = useQuery({
+    queryKey: ['cultos_count_month', organization?.id],
+    enabled: !!organization?.id,
+    queryFn: async () => {
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1);
+      startOfMonth.setHours(0, 0, 0, 0);
+
+      const { count, error } = await supabase
+        .from('services')
+        .select('*', { count: 'exact', head: true })
+        .eq('organization_id', organization!.id)
+        .gte('date', startOfMonth.toISOString());
+
+      if (error) throw error;
+      return count ?? 0;
+    },
+  });
 
   // Load existing service data
   useEffect(() => {
@@ -230,6 +258,11 @@ export default function ServiceCreate() {
   };
 
   const handleSave = async () => {
+    if (!isEditing && !canCreateCulto(planId, cultosThisMonth)) {
+      setShowUpgrade(true);
+      return;
+    }
+
     const serviceData = {
       title,
       date,
@@ -411,6 +444,12 @@ export default function ServiceCreate() {
           </Button>
         </div>
       </div>
+
+      <UpgradePrompt
+        open={showUpgrade}
+        onOpenChange={setShowUpgrade}
+        reason="cultos"
+      />
     </AppLayout>
   );
 }
