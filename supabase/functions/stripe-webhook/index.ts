@@ -27,7 +27,15 @@ Deno.serve(async (req) => {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
-    const { organization_id, plan_id } = session.metadata!;
+
+    if (!session.metadata?.organization_id || !session.metadata?.plan_id) {
+      console.error('Missing metadata in checkout session:', session.id);
+      return new Response(JSON.stringify({ received: true }), {
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const { organization_id, plan_id } = session.metadata;
 
     await supabase
       .from('organization_subscriptions')

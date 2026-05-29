@@ -32,6 +32,21 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Verify user belongs to the organization
+    const { data: orgMember } = await supabase
+      .from('organization_members')
+      .select('id')
+      .eq('organization_id', organizationId)
+      .eq('user_id', user.id)
+      .single();
+
+    if (!orgMember) {
+      return new Response(
+        JSON.stringify({ error: 'Acesso negado' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const { data: plan } = await supabase
       .from('plans')
       .select('stripe_price_id_monthly, name')
