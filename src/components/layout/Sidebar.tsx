@@ -1,15 +1,16 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Music, 
-  Calendar, 
+import {
+  LayoutDashboard,
+  Music,
+  Calendar,
   ChevronLeft,
   ChevronRight,
   Church,
   CalendarCheck,
   UserCog,
   ChevronsUpDown,
-  Check
+  Check,
+  Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -91,13 +92,16 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           </DropdownMenu>
         ) : (
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sidebar-accent">
-              <Church className="h-5 w-5 text-sidebar-foreground" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 flex-shrink-0">
+              <Sparkles className="h-5 w-5 text-white" />
             </div>
             {!collapsed && (
               <div className="animate-fade-in min-w-0">
-                <h1 className="font-serif text-lg font-semibold text-sidebar-foreground truncate">
+                <p className="text-xs text-sidebar-foreground/60 uppercase tracking-widest font-medium">
                   {organization?.name || 'Cantivo'}
+                </p>
+                <h1 className="font-display text-base font-bold text-white tracking-tight">
+                  Cantivo
                 </h1>
               </div>
             )}

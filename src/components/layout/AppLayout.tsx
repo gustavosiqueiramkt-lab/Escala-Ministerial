@@ -41,7 +41,7 @@ export function AppLayout({ children, title }: AppLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-background to-indigo-50/30 dark:from-slate-950 dark:via-background dark:to-indigo-950/20">
       {/* Skills Onboarding Modal */}
       <SkillsOnboardingModal 
         open={showOnboarding} 
@@ -54,7 +54,7 @@ export function AppLayout({ children, title }: AppLayoutProps) {
       </div>
 
       {/* Mobile Header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-card border-b border-border px-4 py-3">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 glass border-b border-border/50 px-4 py-3">
         <div className="flex items-center gap-3">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
