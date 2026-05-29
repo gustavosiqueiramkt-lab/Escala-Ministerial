@@ -10,7 +10,8 @@ import {
   UserCog,
   ChevronsUpDown,
   Check,
-  Sparkles
+  Sparkles,
+  CreditCard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -36,6 +37,7 @@ const volunteerItems = [
 
 const adminItems = [
   { title: 'Gestão de Equipe', icon: UserCog, path: '/team' },
+  { title: 'Planos', icon: CreditCard, path: '/pricing', leaderOnly: true },
 ];
 
 interface SidebarProps {

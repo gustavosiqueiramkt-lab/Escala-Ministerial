@@ -13,6 +13,7 @@ import ServiceDetail from "./pages/ServiceDetail";
 import MySchedule from "./pages/MySchedule";
 import TeamManagement from "./pages/TeamManagement";
 import Organization from "./pages/Organization";
+import Pricing from "./pages/Pricing";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/services/:id/edit" element={<ProtectedRoute><ServiceCreate /></ProtectedRoute>} />
             <Route path="/my-schedule" element={<ProtectedRoute><MySchedule /></ProtectedRoute>} />
             <Route path="/team" element={<ProtectedRoute><TeamManagement /></ProtectedRoute>} />
+            <Route path="/pricing" element={<ProtectedRoute><Pricing /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
