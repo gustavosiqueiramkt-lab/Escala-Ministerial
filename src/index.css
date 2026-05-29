@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,92 +6,93 @@
 
 @layer base {
   :root {
-    /* Warm, spiritual color palette */
-    --background: 40 33% 98%;
-    --foreground: 222 47% 11%;
+    --background: 250 50% 98%;
+    --foreground: 243 47% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 243 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 243 47% 11%;
 
-    /* Deep indigo primary */
-    --primary: 234 62% 45%;
+    /* Cantivo Violet */
+    --primary: 243 89% 58%;
     --primary-foreground: 0 0% 100%;
 
-    /* Warm cream secondary */
-    --secondary: 40 33% 94%;
-    --secondary-foreground: 222 47% 11%;
+    /* Soft lavender secondary */
+    --secondary: 250 40% 95%;
+    --secondary-foreground: 243 47% 11%;
 
-    /* Muted warm tones */
-    --muted: 40 20% 92%;
-    --muted-foreground: 220 13% 46%;
+    --muted: 250 30% 93%;
+    --muted-foreground: 243 20% 50%;
 
-    /* Amber accent for highlights */
+    /* Cantivo Amber */
     --accent: 38 92% 50%;
-    --accent-foreground: 222 47% 11%;
+    --accent-foreground: 243 47% 11%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Success green for availability */
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
 
-    /* Warning amber for alerts */
     --warning: 38 92% 50%;
-    --warning-foreground: 222 47% 11%;
+    --warning-foreground: 243 47% 11%;
 
-    --border: 40 20% 88%;
-    --input: 40 20% 88%;
-    --ring: 234 62% 45%;
+    --border: 250 30% 88%;
+    --input: 250 30% 88%;
+    --ring: 243 89% 58%;
 
-    --radius: 0.75rem;
+    --radius: 0.875rem;
 
-    /* Sidebar */
-    --sidebar-background: 234 62% 45%;
+    /* Sidebar com violet */
+    --sidebar-background: 243 89% 58%;
     --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 0 0% 100%;
-    --sidebar-primary-foreground: 234 62% 45%;
-    --sidebar-accent: 234 50% 55%;
+    --sidebar-primary-foreground: 243 89% 58%;
+    --sidebar-accent: 243 70% 68%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 234 50% 55%;
+    --sidebar-border: 243 70% 68%;
     --sidebar-ring: 0 0% 100%;
 
-    /* Custom gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(234 62% 45%) 0%, hsl(250 60% 55%) 100%);
+    /* Gradientes */
+    --gradient-primary: linear-gradient(135deg, hsl(243 89% 58%) 0%, hsl(263 80% 65%) 100%);
     --gradient-accent: linear-gradient(135deg, hsl(38 92% 50%) 0%, hsl(28 92% 55%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(40 33% 98%) 100%);
-    
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(222 47% 11% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(222 47% 11% / 0.1), 0 2px 4px -1px hsl(222 47% 11% / 0.06);
-    --shadow-lg: 0 10px 15px -3px hsl(222 47% 11% / 0.1), 0 4px 6px -2px hsl(222 47% 11% / 0.05);
-    --shadow-card: 0 1px 3px 0 hsl(222 47% 11% / 0.1), 0 1px 2px 0 hsl(222 47% 11% / 0.06);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(250 50% 98%) 100%);
+
+    /* Glassmorphism */
+    --glass-bg: hsl(0 0% 100% / 0.65);
+    --glass-border: hsl(0 0% 100% / 0.3);
+    --glass-shadow: 0 8px 32px hsl(243 89% 58% / 0.12);
+    --glass-blur: blur(16px);
+
+    --shadow-sm: 0 1px 2px 0 hsl(243 47% 11% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(243 47% 11% / 0.1), 0 2px 4px -1px hsl(243 47% 11% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(243 47% 11% / 0.1), 0 4px 6px -2px hsl(243 47% 11% / 0.05);
+    --shadow-card: 0 1px 3px 0 hsl(243 47% 11% / 0.1), 0 1px 2px 0 hsl(243 47% 11% / 0.06);
   }
 
   .dark {
-    --background: 222 47% 8%;
-    --foreground: 40 33% 98%;
+    --background: 243 47% 7%;
+    --foreground: 250 50% 97%;
 
-    --card: 222 47% 11%;
-    --card-foreground: 40 33% 98%;
+    --card: 243 40% 10%;
+    --card-foreground: 250 50% 97%;
 
-    --popover: 222 47% 11%;
-    --popover-foreground: 40 33% 98%;
+    --popover: 243 40% 10%;
+    --popover-foreground: 250 50% 97%;
 
-    --primary: 234 62% 60%;
+    --primary: 243 89% 68%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 222 30% 18%;
-    --secondary-foreground: 40 33% 98%;
+    --secondary: 243 30% 18%;
+    --secondary-foreground: 250 50% 97%;
 
-    --muted: 222 30% 18%;
-    --muted-foreground: 220 13% 65%;
+    --muted: 243 30% 18%;
+    --muted-foreground: 243 20% 65%;
 
     --accent: 38 92% 55%;
-    --accent-foreground: 222 47% 11%;
+    --accent-foreground: 243 47% 11%;
 
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
@@ -100,20 +101,24 @@
     --success-foreground: 0 0% 100%;
 
     --warning: 38 92% 55%;
-    --warning-foreground: 222 47% 11%;
+    --warning-foreground: 243 47% 11%;
 
-    --border: 222 30% 22%;
-    --input: 222 30% 22%;
-    --ring: 234 62% 60%;
+    --border: 243 30% 22%;
+    --input: 243 30% 22%;
+    --ring: 243 89% 68%;
 
-    --sidebar-background: 222 47% 8%;
-    --sidebar-foreground: 40 33% 98%;
-    --sidebar-primary: 234 62% 60%;
+    --sidebar-background: 243 47% 7%;
+    --sidebar-foreground: 250 50% 97%;
+    --sidebar-primary: 243 89% 68%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222 30% 18%;
-    --sidebar-accent-foreground: 40 33% 98%;
-    --sidebar-border: 222 30% 22%;
-    --sidebar-ring: 234 62% 60%;
+    --sidebar-accent: 243 30% 18%;
+    --sidebar-accent-foreground: 250 50% 97%;
+    --sidebar-border: 243 30% 22%;
+    --sidebar-ring: 243 89% 68%;
+
+    --glass-bg: hsl(243 40% 10% / 0.7);
+    --glass-border: hsl(243 89% 68% / 0.2);
+    --glass-shadow: 0 8px 32px hsl(243 89% 58% / 0.2);
   }
 }
 
@@ -128,7 +133,7 @@
   }
 
   h1, h2, h3 {
-    font-family: 'DM Sans', 'Inter', sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
     font-weight: 600;
   }
 }
