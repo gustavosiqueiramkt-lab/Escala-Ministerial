@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0f0a2e]">
+    <section className="relative min-h-screen flex items-center overflow-x-hidden bg-[#0f0a2e] -mb-px">
       {/* Mesh gradient layers */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#0f0a2e] via-[#1e1458] to-[#2d1fa3]" />
       <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-violet-600/10 to-indigo-400/20" />
