@@ -14,7 +14,7 @@ const problems = [
   {
     icon: AlertTriangle,
     title: 'Falta de última hora',
-    description: 'Ninguém avisou que não podia tocar. Você só descobre quando já está no palco.',
+    description: 'Ninguém avisou que não podia tocar e você só descobre quando já está no palco.',
   },
 ];
 
@@ -27,7 +27,7 @@ export function ProblemSection() {
             Você conhece essa situação?
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Todo líder de louvor já passou por isso. O problema não é falta de dedicação — é falta da ferramenta certa.
+            Todo líder de louvor já passou por isso. O problema não é falta de dedicação, é não ter a ferramenta certa.
           </p>
         </div>
 

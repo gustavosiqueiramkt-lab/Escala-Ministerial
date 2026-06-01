@@ -5,6 +5,7 @@ import { LandingNav } from '@/components/landing/LandingNav';
 import { HeroSection } from '@/components/landing/HeroSection';
 import { ProblemSection } from '@/components/landing/ProblemSection';
 import { FeaturesSection } from '@/components/landing/FeaturesSection';
+import { FeatureExplorerSection } from '@/components/landing/FeatureExplorerSection';
 import { PricingSection } from '@/components/landing/PricingSection';
 import { CtaSection } from '@/components/landing/CtaSection';
 import { LandingFooter } from '@/components/landing/LandingFooter';
@@ -33,6 +34,7 @@ export default function Landing() {
       <HeroSection />
       <ProblemSection />
       <FeaturesSection />
+      <FeatureExplorerSection />
       <PricingSection />
       <CtaSection />
       <LandingFooter />

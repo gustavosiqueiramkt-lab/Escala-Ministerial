@@ -5,16 +5,16 @@ const features = [
   {
     icon: Users,
     title: 'Escala por habilidade',
-    description: 'Cada membro tem suas funções cadastradas. Você escala quem realmente pode tocar na função certa, sem adivinhar.',
+    description: 'Cada membro tem suas funções cadastradas. Você escala quem realmente pode tocar na função certa, sem precisar adivinhar.',
   },
   {
     icon: Flame,
     title: 'Controle de fadiga',
-    description: 'O Cantivo avisa quando alguém está sendo escalado demais. Sua equipe descansa, seu culto não sofre.',
+    description: 'O Cantivo avisa quando alguém está sendo escalado demais. Sua equipe descansa e o culto não sofre.',
   },
   {
     icon: Music,
-    title: 'Setlist no app',
+    title: 'Setlist integrado',
     description: 'Monte o repertório do culto com drag-and-drop. Cada músico vê as músicas antes de chegar.',
   },
 ];
@@ -25,10 +25,10 @@ export function FeaturesSection() {
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Tudo que sua equipe precisa em um lugar só.
+            Escala, setlist e equipe no mesmo lugar.
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Feito para quem está no palco e para quem escala. Simples para os dois lados.
+            Tudo que o líder precisa para organizar o culto e tudo que o músico precisa para saber quando toca.
           </p>
         </div>
 
