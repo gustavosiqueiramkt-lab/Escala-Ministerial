@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,8 @@ import { Music } from 'lucide-react';
 
 export default function Auth() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const defaultTab = searchParams.get('tab') === 'signup' ? 'register' : 'login';
   const { signIn, signUp } = useAuth();
   const [loading, setLoading] = useState(false);
 
@@ -27,7 +29,7 @@ export default function Auth() {
     setLoading(true);
     try {
       await signIn(loginEmail, loginPassword);
-      navigate('/');
+      navigate('/dashboard');
     } catch (error) {
       // Error is handled in useAuth
     } finally {
@@ -40,7 +42,7 @@ export default function Auth() {
     setLoading(true);
     try {
       await signUp(registerEmail, registerPassword, registerName);
-      navigate('/');
+      navigate('/dashboard');
     } catch (error) {
       // Error is handled in useAuth
     } finally {
@@ -61,7 +63,7 @@ export default function Auth() {
         </div>
 
         <Card className="card-elevated">
-          <Tabs defaultValue="login" className="w-full">
+          <Tabs defaultValue={defaultTab} className="w-full">
             <CardHeader className="pb-4">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="login">Entrar</TabsTrigger>
