@@ -4,6 +4,13 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { CantivoMark } from '@/components/brand/CantivoMark';
 
+const scrollToSection = (id: string) => {
+  const element = document.getElementById(id);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
+  }
+};
+
 export function LandingNav() {
   const [scrolled, setScrolled] = useState(false);
 
@@ -19,7 +26,7 @@ export function LandingNav() {
         className={cn(
           'flex items-center justify-between gap-6 rounded-full px-5 py-2.5 transition-all duration-300',
           'bg-white/80 backdrop-blur-md border border-white/40',
-          scrolled ? 'shadow-lg shadow-violet-900/10 w-full max-w-2xl' : 'w-full max-w-xl'
+          scrolled ? 'shadow-lg shadow-violet-900/10 w-full max-w-4xl' : 'w-full max-w-3xl'
         )}
       >
         <Link to="/" className="flex items-center gap-2 flex-shrink-0">
@@ -28,6 +35,27 @@ export function LandingNav() {
           </div>
           <span className="font-display font-bold text-foreground text-sm">Cantivo</span>
         </Link>
+
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => scrollToSection('conheca')}
+            className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
+          >
+            Conheça
+          </button>
+          <button
+            onClick={() => scrollToSection('planos')}
+            className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
+          >
+            Planos
+          </button>
+          <button
+            onClick={() => scrollToSection('depoimentos')}
+            className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
+          >
+            Depoimentos
+          </button>
+        </div>
 
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" asChild className="text-sm font-medium">

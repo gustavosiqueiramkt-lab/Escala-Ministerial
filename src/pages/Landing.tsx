@@ -37,9 +37,15 @@ export default function Landing() {
       <HeroSection />
       <ProblemSection />
       <FeaturesSection />
-      <FeatureExplorerSection />
-      <TestimonialsSection />
-      <PricingSection />
+      <section id="conheca">
+        <FeatureExplorerSection />
+      </section>
+      <section id="depoimentos">
+        <TestimonialsSection />
+      </section>
+      <section id="planos">
+        <PricingSection />
+      </section>
       <CtaSection />
       <LandingFooter />
     </div>
