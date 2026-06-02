@@ -20,9 +20,9 @@ const problems = [
 
 export function ProblemSection() {
   return (
-    <section className="py-24 bg-white">
+    <section className="relative py-24 bg-white overflow-hidden">
       <div className="max-w-5xl mx-auto px-6">
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 reveal">
           <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
             Você conhece essa situação?
           </h2>
@@ -32,10 +32,10 @@ export function ProblemSection() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {problems.map((problem) => (
+          {problems.map((problem, i) => (
             <div
               key={problem.title}
-              className="flex flex-col gap-4 p-6 rounded-2xl border border-border bg-background hover:border-primary/20 hover:shadow-md transition-all duration-200"
+              className={`reveal reveal-delay-${i + 1} flex flex-col gap-4 p-6 rounded-2xl border border-border bg-background hover:border-primary/20 hover:shadow-md transition-all duration-200`}
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50">
                 <problem.icon className="h-5 w-5 text-primary" />
@@ -48,6 +48,9 @@ export function ProblemSection() {
           ))}
         </div>
       </div>
+
+      {/* Gradient fade to violet-50 */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-white to-[#f5f3ff] pointer-events-none" />
     </section>
   );
 }

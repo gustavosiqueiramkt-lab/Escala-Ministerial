@@ -21,9 +21,12 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section className="py-16 pt-8 bg-[#f5f3ff]">
-      <div className="max-w-5xl mx-auto px-6">
-        <div className="text-center mb-16">
+    <section className="relative py-16 pt-8 bg-[#f5f3ff] overflow-hidden">
+      {/* Gradient fade from white (top) */}
+      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-white to-[#f5f3ff] pointer-events-none" />
+
+      <div className="relative z-10 max-w-5xl mx-auto px-6">
+        <div className="text-center mb-16 reveal">
           <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
             Escala, setlist e equipe no mesmo lugar.
           </h2>
@@ -33,8 +36,8 @@ export function FeaturesSection() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {features.map((feature) => (
-            <GlassCard key={feature.title} className="p-6 flex flex-col gap-4">
+          {features.map((feature, i) => (
+            <GlassCard key={feature.title} className={`reveal reveal-delay-${i + 1} p-6 flex flex-col gap-4`}>
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
                 <feature.icon className="h-5 w-5 text-primary" />
               </div>
@@ -46,6 +49,9 @@ export function FeaturesSection() {
           ))}
         </div>
       </div>
+
+      {/* Gradient fade to white (bottom) */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-[#f5f3ff] to-white pointer-events-none" />
     </section>
   );
 }

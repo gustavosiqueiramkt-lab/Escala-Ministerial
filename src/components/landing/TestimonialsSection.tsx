@@ -2,32 +2,14 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Quote } from 'lucide-react';
 
-const placeholders = [
-  {
-    quote: 'Vaga reservada para a primeira igeja a compartilhar sua experiência.',
-    name: 'Líder de Louvor',
-    church: 'Sua Igreja',
-    empty: true,
-  },
-  {
-    quote: 'Vaga reservada para a primeira igeja a compartilhar sua experiência.',
-    name: 'Líder de Louvor',
-    church: 'Sua Igreja',
-    empty: true,
-  },
-  {
-    quote: 'Vaga reservada para a primeira igeja a compartilhar sua experiência.',
-    name: 'Líder de Louvor',
-    church: 'Sua Igreja',
-    empty: true,
-  },
-];
-
 export function TestimonialsSection() {
   return (
-    <section className="py-16 pt-8 bg-[#f5f3ff]">
-      <div className="max-w-5xl mx-auto px-6">
-        <div className="text-center mb-16">
+    <section className="relative py-16 pt-8 bg-[#f5f3ff] overflow-hidden">
+      {/* Gradient fade from white (top) */}
+      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-white to-[#f5f3ff] pointer-events-none" />
+
+      <div className="relative z-10 max-w-5xl mx-auto px-6">
+        <div className="text-center mb-16 reveal">
           <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
             As primeiras igrejas estão chegando.
           </h2>
@@ -37,10 +19,10 @@ export function TestimonialsSection() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-6 mb-12">
-          {placeholders.map((_, i) => (
+          {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className="flex flex-col gap-4 p-6 rounded-2xl border-2 border-dashed border-violet-200 bg-white/60"
+              className={`reveal reveal-delay-${i + 1} flex flex-col gap-4 p-6 rounded-2xl border-2 border-dashed border-violet-200 bg-white/60`}
             >
               <Quote className="h-6 w-6 text-violet-300" />
               <div className="flex-1">
@@ -61,7 +43,7 @@ export function TestimonialsSection() {
           ))}
         </div>
 
-        <div className="text-center">
+        <div className="text-center reveal">
           <Button asChild className="rounded-full px-8">
             <Link to="/auth?tab=signup">
               Quero ser uma das primeiras igrejas
@@ -72,6 +54,9 @@ export function TestimonialsSection() {
           </p>
         </div>
       </div>
+
+      {/* Gradient fade to white (bottom) */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-[#f5f3ff] to-white pointer-events-none" />
     </section>
   );
 }

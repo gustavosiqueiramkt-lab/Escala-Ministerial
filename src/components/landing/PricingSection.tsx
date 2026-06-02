@@ -49,9 +49,9 @@ const plans = [
 
 export function PricingSection() {
   return (
-    <section className="py-24 bg-white">
+    <section className="relative py-24 bg-white overflow-hidden">
       <div className="max-w-5xl mx-auto px-6">
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 reveal">
           <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
             Simples e justo para qualquer tamanho de equipe.
           </h2>
@@ -61,11 +61,11 @@ export function PricingSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {plans.map((plan) => (
+          {plans.map((plan, i) => (
             <GlassCard
               key={plan.id}
               className={cn(
-                'p-6 flex flex-col gap-4 relative',
+                `reveal reveal-delay-${Math.min(i + 1, 4)} p-6 flex flex-col gap-4 relative`,
                 plan.highlight && 'ring-2 ring-primary'
               )}
             >
@@ -100,6 +100,9 @@ export function PricingSection() {
           ))}
         </div>
       </div>
+
+      {/* Gradient fade to CTA dark */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-white to-[#1e1458] pointer-events-none" />
     </section>
   );
 }

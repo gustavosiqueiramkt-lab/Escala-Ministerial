@@ -4,11 +4,11 @@ import { ArrowRight } from 'lucide-react';
 
 export function CtaSection() {
   return (
-    <section className="py-20 pt-12 bg-gradient-to-br from-[#1e1458] via-[#2d1fa3] to-[#4F46E5] relative overflow-hidden">
+    <section className="py-24 pt-16 bg-gradient-to-br from-[#1e1458] via-[#2d1fa3] to-[#4F46E5] relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-t from-[#1e1458]/60 to-transparent" />
       <div className="absolute top-0 right-0 w-96 h-96 bg-violet-400/10 rounded-full blur-3xl" />
 
-      <div className="relative z-10 max-w-3xl mx-auto px-6 text-center flex flex-col items-center gap-6">
+      <div className="relative z-10 max-w-3xl mx-auto px-6 text-center flex flex-col items-center gap-6 reveal">
         <h2 className="font-display text-4xl md:text-5xl font-bold text-white leading-tight">
           Sua equipe vai agradecer.
         </h2>

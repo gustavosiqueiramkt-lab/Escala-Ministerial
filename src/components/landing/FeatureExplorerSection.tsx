@@ -52,7 +52,7 @@ export function FeatureExplorerSection() {
   return (
     <section className="py-24 bg-white">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 reveal">
           <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
             Veja o Cantivo por dentro.
           </h2>
@@ -61,7 +61,7 @@ export function FeatureExplorerSection() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-[280px,1fr] gap-8 items-start">
+        <div className="grid lg:grid-cols-[280px,1fr] gap-8 items-start reveal reveal-delay-1">
           {/* Tab list */}
           <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0">
             {features.map((feature) => (
