@@ -44,6 +44,11 @@ const roleColors = {
   technician: 'bg-orange-500/10 text-orange-600 border-orange-500/30',
 };
 
+function parseDateString(dateStr: string): Date {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return new Date(year, month - 1, day);
+}
+
 export function MemberSelect({ selectedIds, onToggle, serviceDate, filterRole }: MemberSelectProps) {
   const { data: members = [], isLoading: membersLoading } = useOrganizationMembersWithSkills();
   const { data: unavailability = [] } = useMemberUnavailability();
@@ -62,7 +67,7 @@ export function MemberSelect({ selectedIds, onToggle, serviceDate, filterRole }:
 
   const getMemberStatus = (member: MemberWithSkills) => {
     const isUnavailable = unavailability.some(
-      (u) => u.member_id === member.id && isSameDay(new Date(u.date), serviceDate)
+      (u) => u.member_id === member.id && isSameDay(parseDateString(u.date), serviceDate)
     );
     
     // Use service count from the last 30 days for fatigue calculation

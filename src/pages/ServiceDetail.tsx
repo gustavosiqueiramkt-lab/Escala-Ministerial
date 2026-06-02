@@ -54,6 +54,11 @@ import { format, isToday, addDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 
+function parseDateString(dateStr: string): Date {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return new Date(year, month - 1, day);
+}
+
 // Mobile-first setlist card
 interface SetlistCardProps {
   item: {
@@ -192,7 +197,7 @@ export default function ServiceDetail() {
   // Duplicate dialog with date picker
   const [isDuplicateDialogOpen, setIsDuplicateDialogOpen] = useState(false);
   const [duplicateDate, setDuplicateDate] = useState(
-    service ? format(addDays(new Date(service.date), 7), 'yyyy-MM-dd') : ''
+    service ? format(addDays(parseDateString(service.date), 7), 'yyyy-MM-dd') : ''
   );
 
   const handleSongClick = (song: Song) => {
@@ -233,7 +238,7 @@ export default function ServiceDetail() {
   }
 
   const sortedItems = [...(service.items || [])].sort((a, b) => a.item_order - b.item_order);
-  const serviceDate = new Date(service.date);
+  const serviceDate = parseDateString(service.date);
   const isServiceToday = isToday(serviceDate);
 
   return (

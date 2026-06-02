@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { MemberSelect } from '@/components/volunteers/MemberSelect';
@@ -46,6 +47,11 @@ interface LocalServiceItem {
   song_id?: string;
   moment_title?: string;
   item_order: number;
+}
+
+function parseDateString(dateStr: string): Date {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return new Date(year, month - 1, day);
 }
 
 function SortableItem({ 
@@ -161,7 +167,7 @@ export default function ServiceCreate() {
         .from('services')
         .select('*', { count: 'exact', head: true })
         .eq('organization_id', organization!.id)
-        .gte('date', startOfMonth.toISOString());
+        .gte('date', format(startOfMonth, 'yyyy-MM-dd'));
 
       if (error) throw error;
       return count ?? 0;
@@ -284,7 +290,7 @@ export default function ServiceCreate() {
     navigate('/services');
   };
 
-  const serviceDate = date ? new Date(date) : new Date();
+  const serviceDate = date ? parseDateString(date) : new Date();
   const isSaving = createService.isPending || updateService.isPending;
 
   return (

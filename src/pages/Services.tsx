@@ -227,7 +227,7 @@ function ServiceDetail({
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4" />
           <span className="capitalize">
-            {format(new Date(service.date), "EEEE, d 'de' MMMM", { locale: ptBR })}
+            {format(parseDateString(service.date), "EEEE, d 'de' MMMM", { locale: ptBR })}
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -316,9 +316,13 @@ function ServiceDetail({
   );
 }
 
-function isSameDateString(dateStr: string, date: Date): boolean {
+function parseDateString(dateStr: string): Date {
   const [year, month, day] = dateStr.split('-').map(Number);
-  const parsed = new Date(year, month - 1, day);
+  return new Date(year, month - 1, day);
+}
+
+function isSameDateString(dateStr: string, date: Date): boolean {
+  const parsed = parseDateString(dateStr);
   return parsed.getFullYear() === date.getFullYear() &&
          parsed.getMonth() === date.getMonth() &&
          parsed.getDate() === date.getDate();
@@ -393,7 +397,7 @@ export default function Services() {
 
   const handleDuplicateInSheet = (service: Service) => {
     setServiceToDuplicate(service);
-    setDuplicateDate(format(addDays(new Date(service.date), 7), 'yyyy-MM-dd'));
+    setDuplicateDate(format(addDays(parseDateString(service.date), 7), 'yyyy-MM-dd'));
     setIsDuplicateDialogOpen(true);
   };
 
