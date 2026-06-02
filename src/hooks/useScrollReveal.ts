@@ -15,7 +15,7 @@ export function useScrollReveal() {
     };
 
     // Reveal after React render completes and DOM is fully ready
-    setTimeout(revealElements, 100);
+    setTimeout(revealElements, 300);
 
     // Reveal on scroll
     window.addEventListener('scroll', revealElements, { passive: true });
