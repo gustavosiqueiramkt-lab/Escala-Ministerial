@@ -65,9 +65,10 @@ export function PricingSection() {
             <GlassCard
               key={plan.id}
               className={cn(
-                `reveal reveal-delay-${Math.min(i + 1, 4)} p-6 flex flex-col gap-4 relative`,
+                'reveal p-6 flex flex-col gap-4 relative',
                 plan.highlight && 'ring-2 ring-primary'
               )}
+              style={{ transitionDelay: `${Math.min(i + 1, 4) * 0.08}s` }}
             >
               {plan.highlight && (
                 <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">
@@ -102,7 +103,7 @@ export function PricingSection() {
       </div>
 
       {/* Gradient fade to CTA dark */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-white to-[#1e1458] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-b from-white to-[#1e1458] pointer-events-none" />
     </section>
   );
 }
