@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { useService, useUpdateServiceItemNotes } from '@/hooks/useServices';
+import { useService, useUpdateServiceItemNotes, useDeleteService, useDuplicateService } from '@/hooks/useServices';
 import { useSongs, Song } from '@/hooks/useSongs';
 import { useOrganizationMembersWithSkills } from '@/hooks/useMemberSkills';
 import { useOrgRole } from '@/hooks/useOrgRole';
@@ -20,6 +20,22 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
   ChevronLeft,
   Calendar,
   Clock,
@@ -30,8 +46,11 @@ import {
   MessageSquare,
   Save,
   Loader2,
+  MoreVertical,
+  Copy,
+  Trash2,
 } from 'lucide-react';
-import { format, isToday } from 'date-fns';
+import { format, isToday, addDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 
@@ -148,10 +167,12 @@ export default function ServiceDetail() {
   const { data: members = [] } = useOrganizationMembersWithSkills();
   const { isLeader } = useOrgRole();
   const updateNotes = useUpdateServiceItemNotes();
+  const deleteService = useDeleteService();
+  const duplicateService = useDuplicateService();
 
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  
+
   // Notes editing state
   const [notesDialog, setNotesDialog] = useState<{
     open: boolean;
@@ -164,6 +185,15 @@ export default function ServiceDetail() {
     currentNotes: '',
     itemTitle: '',
   });
+
+  // Delete dialog
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+
+  // Duplicate dialog with date picker
+  const [isDuplicateDialogOpen, setIsDuplicateDialogOpen] = useState(false);
+  const [duplicateDate, setDuplicateDate] = useState(
+    service ? format(addDays(new Date(service.date), 7), 'yyyy-MM-dd') : ''
+  );
 
   const handleSongClick = (song: Song) => {
     setSelectedSong(song);
@@ -252,17 +282,37 @@ export default function ServiceDetail() {
             </div>
           </div>
 
-          {/* Edit button - only for leaders */}
+          {/* Action menu - only for leaders */}
           {isLeader && (
-            <Button 
-              size="sm"
-              variant="outline"
-              onClick={() => navigate(`/services/${id}/edit`)}
-              className={cn(isServiceToday && 'hidden sm:flex')}
-            >
-              <Pencil className="h-4 w-4 sm:mr-2" />
-              <span className="hidden sm:inline">Editar</span>
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  size="icon"
+                  variant="outline"
+                  className={cn(isServiceToday && 'hidden sm:flex')}
+                >
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => navigate(`/services/${id}/edit`)}>
+                  <Pencil className="h-4 w-4 mr-2" />
+                  <span>Editar</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setIsDuplicateDialogOpen(true)}>
+                  <Copy className="h-4 w-4 mr-2" />
+                  <span>Duplicar</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => setIsDeleteAlertOpen(true)}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  <span>Excluir culto</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </div>
       </div>
@@ -389,6 +439,87 @@ export default function ServiceDetail() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Duplicate Dialog */}
+      {service && (
+        <Dialog open={isDuplicateDialogOpen} onOpenChange={setIsDuplicateDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Duplicar culto</DialogTitle>
+              <DialogDescription>
+                Escolha a data do novo culto. Equipe e liturgia serão copiadas.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Data do novo culto</label>
+                <input
+                  type="date"
+                  value={duplicateDate}
+                  onChange={(e) => setDuplicateDate(e.target.value)}
+                  className="w-full mt-2 px-3 py-2 border border-input rounded-md text-sm"
+                />
+              </div>
+            </div>
+
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button
+                variant="outline"
+                onClick={() => setIsDuplicateDialogOpen(false)}
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={() => {
+                  duplicateService.mutate({ sourceId: service.id, newDate: duplicateDate });
+                  setIsDuplicateDialogOpen(false);
+                }}
+                disabled={duplicateService.isPending}
+                className="gap-2"
+              >
+                {duplicateService.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
+                Duplicar
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir culto</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este culto? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => {
+              deleteService.mutate(id || '');
+              setIsDeleteAlertOpen(false);
+              setTimeout(() => navigate('/services'), 100);
+            }}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            disabled={deleteService.isPending}
+          >
+            {deleteService.isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Excluindo...
+              </>
+            ) : (
+              'Excluir'
+            )}
+          </AlertDialogAction>
+        </AlertDialogContent>
+      </AlertDialog>
     </AppLayout>
   );
 }

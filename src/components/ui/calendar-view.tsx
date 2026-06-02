@@ -124,8 +124,9 @@ export function CalendarView({ services, onDateClick, onServiceClick }: Calendar
                         ? 'bg-success/20 text-success hover:bg-success/30'
                         : 'bg-warning/20 text-warning hover:bg-warning/30'
                     )}
+                    title={`${service.title} - ${service.time}`}
                   >
-                    {service.time}
+                    {service.title.length > 10 ? service.title.slice(0, 10) + '…' : service.title} · {service.time}
                   </div>
                 ))}
                 {dayServices.length > 2 && (

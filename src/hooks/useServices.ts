@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useOrganization } from './useOrganization';
@@ -327,6 +328,87 @@ export function useUpdateServiceItemNotes() {
     },
     onError: (error: Error) => {
       toast.error(`Erro ao salvar nota: ${error.message}`);
+    },
+  });
+}
+
+export function useDuplicateService() {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: async ({ sourceId, newDate }: { sourceId: string; newDate: string }) => {
+      // 1. Fetch source service with items and volunteers
+      const { data: sourceService, error: fetchError } = await supabase
+        .from('services')
+        .select(`
+          *,
+          items:service_items(*),
+          volunteers:service_volunteers(*)
+        `)
+        .eq('id', sourceId)
+        .single();
+
+      if (fetchError) throw fetchError;
+      if (!sourceService) throw new Error('Culto de origem não encontrado');
+
+      // 2. Create new service with modified title and date
+      const { data: newService, error: serviceError } = await supabase
+        .from('services')
+        .insert({
+          title: `Cópia de ${sourceService.title}`,
+          date: newDate,
+          time: sourceService.time,
+          status: 'draft',
+          organization_id: sourceService.organization_id,
+        })
+        .select()
+        .single();
+
+      if (serviceError) throw serviceError;
+
+      // 3. Copy service items
+      if (sourceService.items && sourceService.items.length > 0) {
+        const itemsToInsert = sourceService.items.map((item: any) => ({
+          service_id: newService.id,
+          type: item.type,
+          song_id: item.song_id,
+          moment_title: item.moment_title,
+          item_order: item.item_order,
+          notes: item.notes,
+        }));
+
+        const { error: itemsError } = await supabase
+          .from('service_items')
+          .insert(itemsToInsert);
+
+        if (itemsError) throw itemsError;
+      }
+
+      // 4. Copy service volunteers (members)
+      if (sourceService.volunteers && sourceService.volunteers.length > 0) {
+        const membersToInsert = sourceService.volunteers.map((volunteer: any) => ({
+          service_id: newService.id,
+          member_id: volunteer.member_id,
+          status: 'pending',
+        }));
+
+        const { error: membersError } = await supabase
+          .from('service_volunteers')
+          .insert(membersToInsert);
+
+        if (membersError) throw membersError;
+      }
+
+      return newService as Service;
+    },
+    onSuccess: (newService) => {
+      queryClient.invalidateQueries({ queryKey: ['services'] });
+      toast.success('Culto duplicado com sucesso!');
+      navigate(`/services/${newService.id}`);
+    },
+    onError: (error: Error) => {
+      toast.error(`Erro ao duplicar culto: ${error.message}`);
     },
   });
 }

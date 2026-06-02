@@ -7,16 +7,96 @@ import { useSongs } from '@/hooks/useSongs';
 import { useOrganizationMembersWithSkills } from '@/hooks/useMemberSkills';
 import { useOrgRole } from '@/hooks/useOrgRole';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Plus, Calendar, Music, Users, Clock, Pencil, Trash2, Loader2 } from 'lucide-react';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
+import { Plus, Calendar, Music, Users, Clock, Pencil, Trash2, Loader2, Eye } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
+
+interface DayServicesSheetProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  selectedDay: Date;
+  services: Service[];
+  onServiceClick: (service: Service) => void;
+  onCreateNew: () => void;
+  isLeader: boolean;
+}
+
+function DayServicesSheet({
+  open,
+  onOpenChange,
+  selectedDay,
+  services,
+  onServiceClick,
+  onCreateNew,
+  isLeader,
+}: DayServicesSheetProps) {
+  const sortedServices = [...services].sort((a, b) => a.time.localeCompare(b.time));
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent side="bottom" className="h-auto max-h-[80vh] overflow-auto">
+        <SheetHeader>
+          <SheetTitle className="capitalize">
+            {format(selectedDay, "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR })}
+          </SheetTitle>
+        </SheetHeader>
+
+        <div className="space-y-3 mt-6">
+          {sortedServices.map((service) => (
+            <button
+              key={service.id}
+              onClick={() => onServiceClick(service)}
+              className={cn(
+                'w-full flex items-center justify-between p-4 rounded-lg border-2 text-left transition-all',
+                service.status === 'published'
+                  ? 'border-success/20 bg-success/5 hover:border-success/40 hover:bg-success/10'
+                  : 'border-warning/20 bg-warning/5 hover:border-warning/40 hover:bg-warning/10'
+              )}
+            >
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-medium">{service.time}</span>
+                  <Badge variant={service.status === 'published' ? 'default' : 'secondary'} className="text-xs">
+                    {service.status === 'published' ? 'Publicado' : 'Rascunho'}
+                  </Badge>
+                </div>
+                <p className="text-sm text-muted-foreground mt-1">{service.title}</p>
+              </div>
+              <Eye className="h-4 w-4 text-primary ml-2 shrink-0" />
+            </button>
+          ))}
+        </div>
+
+        {isLeader && (
+          <Button
+            onClick={onCreateNew}
+            className="w-full mt-6"
+            variant="outline"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Novo culto neste dia
+          </Button>
+        )}
+      </SheetContent>
+    </Sheet>
+  );
+}
 
 function ServiceDetail({ 
   service, 
@@ -169,21 +249,42 @@ function ServiceDetail({
   );
 }
 
+function isSameDateString(dateStr: string, date: Date): boolean {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const parsed = new Date(year, month - 1, day);
+  return parsed.getFullYear() === date.getFullYear() &&
+         parsed.getMonth() === date.getMonth() &&
+         parsed.getDate() === date.getDate();
+}
+
 export default function Services() {
   const navigate = useNavigate();
   const { data: services = [], isLoading } = useServices();
   const { isLeader } = useOrgRole();
   const deleteService = useDeleteService();
   const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const [selectedDay, setSelectedDay] = useState<Date | null>(null);
+  const [dayServicesOpen, setDayServicesOpen] = useState(false);
+
+  const dayServices = selectedDay
+    ? services.filter(s => isSameDateString(s.date, selectedDay))
+    : [];
 
   const handleServiceClick = (service: Service) => {
     // Navigate to detail page instead of opening modal
     navigate(`/services/${service.id}`);
+    setDayServicesOpen(false);
   };
 
   const handleDateClick = (date: Date) => {
-    if (!isLeader) return;
-    navigate(`/services/new?date=${format(date, 'yyyy-MM-dd')}`);
+    const dayServices = services.filter(s => isSameDateString(s.date, date));
+
+    if (dayServices.length > 0) {
+      setSelectedDay(date);
+      setDayServicesOpen(true);
+    } else if (isLeader) {
+      navigate(`/services/new?date=${format(date, 'yyyy-MM-dd')}`);
+    }
   };
 
   const handleServiceModalClick = (service: Service, e?: React.MouseEvent) => {
@@ -204,6 +305,13 @@ export default function Services() {
     if (selectedService) {
       await deleteService.mutateAsync(selectedService.id);
       setSelectedService(null);
+    }
+  };
+
+  const handleCreateNewInDay = () => {
+    if (selectedDay) {
+      navigate(`/services/new?date=${format(selectedDay, 'yyyy-MM-dd')}`);
+      setDayServicesOpen(false);
     }
   };
 
@@ -233,6 +341,19 @@ export default function Services() {
         />
       )}
 
+      {/* Day Services Sheet */}
+      {selectedDay && (
+        <DayServicesSheet
+          open={dayServicesOpen}
+          onOpenChange={setDayServicesOpen}
+          selectedDay={selectedDay}
+          services={dayServices}
+          onServiceClick={handleServiceClick}
+          onCreateNew={handleCreateNewInDay}
+          isLeader={isLeader}
+        />
+      )}
+
       {/* Service Detail Dialog */}
       <Dialog open={!!selectedService} onOpenChange={() => setSelectedService(null)}>
         <DialogContent className="max-w-lg">
@@ -242,7 +363,7 @@ export default function Services() {
             </DialogTitle>
           </DialogHeader>
           {selectedService && (
-            <ServiceDetail 
+            <ServiceDetail
               service={selectedService}
               onClose={() => setSelectedService(null)}
               onEdit={handleEdit}
