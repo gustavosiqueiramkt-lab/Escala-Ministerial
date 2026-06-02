@@ -182,13 +182,11 @@ export function useCreateService() {
         const membersToInsert = validated.member_ids.map((member_id) => ({
           service_id: newService.id,
           member_id,
-          // Include volunteer_id as null for backwards compatibility
-          volunteer_id: null as unknown as string,
         }));
 
         const { error: membersError } = await supabase
           .from('service_volunteers')
-          .insert(membersToInsert as any);
+          .insert(membersToInsert);
 
         if (membersError) throw membersError;
       }
@@ -264,13 +262,11 @@ export function useUpdateService() {
           const membersToInsert = validated.member_ids.map((member_id) => ({
             service_id: id,
             member_id,
-            // Include volunteer_id as null for backwards compatibility
-            volunteer_id: null as unknown as string,
           }));
 
           const { error: membersError } = await supabase
             .from('service_volunteers')
-            .insert(membersToInsert as any);
+            .insert(membersToInsert);
 
           if (membersError) throw membersError;
         }
