@@ -14,10 +14,8 @@ export function useScrollReveal() {
       });
     };
 
-    // Reveal after render completes (requestAnimationFrame waits for paint, then timeout ensures DOM is ready)
-    requestAnimationFrame(() => {
-      setTimeout(revealElements, 0);
-    });
+    // Reveal after React render completes and DOM is fully ready
+    setTimeout(revealElements, 100);
 
     // Reveal on scroll
     window.addEventListener('scroll', revealElements, { passive: true });
