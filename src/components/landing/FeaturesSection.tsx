@@ -37,7 +37,7 @@ export function FeaturesSection() {
 
         <div className="grid md:grid-cols-3 gap-6">
           {features.map((feature, i) => (
-            <GlassCard key={feature.title} className={`reveal reveal-delay-${i + 1} p-6 flex flex-col gap-4`}>
+            <GlassCard key={feature.title} className="reveal p-6 flex flex-col gap-4" style={{ transitionDelay: `${(i + 1) * 0.08}s` }}>
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
                 <feature.icon className="h-5 w-5 text-primary" />
               </div>

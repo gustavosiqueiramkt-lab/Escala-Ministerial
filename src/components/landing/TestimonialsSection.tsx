@@ -22,7 +22,8 @@ export function TestimonialsSection() {
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className={`reveal reveal-delay-${i + 1} flex flex-col gap-4 p-6 rounded-2xl border-2 border-dashed border-violet-200 bg-white/60`}
+              className="reveal flex flex-col gap-4 p-6 rounded-2xl border-2 border-dashed border-violet-200 bg-white/60"
+              style={{ transitionDelay: `${(i + 1) * 0.08}s` }}
             >
               <Quote className="h-6 w-6 text-violet-300" />
               <div className="flex-1">

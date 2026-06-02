@@ -35,7 +35,8 @@ export function ProblemSection() {
           {problems.map((problem, i) => (
             <div
               key={problem.title}
-              className={`reveal reveal-delay-${i + 1} flex flex-col gap-4 p-6 rounded-2xl border border-border bg-background hover:border-primary/20 hover:shadow-md transition-all duration-200`}
+              className="reveal flex flex-col gap-4 p-6 rounded-2xl border border-border bg-background hover:border-primary/20 hover:shadow-md transition-all duration-200"
+              style={{ transitionDelay: `${(i + 1) * 0.08}s` }}
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50">
                 <problem.icon className="h-5 w-5 text-primary" />
