@@ -189,6 +189,9 @@ export default function Dashboard() {
   const { data: members = [], isLoading: membersLoading } = useOrganizationMembersWithSkills();
   const { data: serviceCounts = {} } = useMemberServiceCounts(30);
   const { isLeader, isLoading: roleLoading } = useOrgRole();
+  const { user } = useAuth();
+  const firstName = (user?.user_metadata?.full_name as string | undefined)
+    ?.split(' ')[0] ?? 'Líder';
 
   // Redirect members (non-leaders) to My Schedule
   useEffect(() => {
@@ -220,24 +223,13 @@ export default function Dashboard() {
 
   return (
     <AppLayout title="Dashboard">
-      {/* Leader Quick Actions */}
       {isLeader && (
-        <div className="flex gap-3 mb-6">
-          <Button 
-            onClick={() => navigate('/services/new')}
-            className="btn-primary-gradient"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Novo Culto
-          </Button>
-          <Button 
-            variant="outline"
-            onClick={() => navigate('/team')}
-          >
-            <Users className="h-4 w-4 mr-2" />
-            Gestão de Equipe
-          </Button>
-        </div>
+        <HeroBanner
+          firstName={firstName}
+          nextService={upcomingServices[0] ?? null}
+          onNewService={() => navigate('/services/new')}
+          onTeam={() => navigate('/team')}
+        />
       )}
 
       {/* Stats */}
