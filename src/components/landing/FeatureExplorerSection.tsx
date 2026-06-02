@@ -63,13 +63,13 @@ export function FeatureExplorerSection() {
 
         <div className="grid lg:grid-cols-[280px,1fr] gap-8 items-start reveal" style={{ transitionDelay: '0.08s' }}>
           {/* Tab list */}
-          <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0">
+          <div className="flex flex-col lg:flex-col gap-2 overflow-visible pb-2 lg:pb-0">
             {features.map((feature) => (
               <button
                 key={feature.id}
                 onClick={() => setActive(feature.id)}
                 className={cn(
-                  'flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200 whitespace-nowrap lg:whitespace-normal w-full flex-shrink-0',
+                  'flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200 whitespace-normal',
                   active === feature.id
                     ? 'bg-primary text-white shadow-md shadow-primary/20'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -111,7 +111,7 @@ export function FeatureExplorerSection() {
                 src={current.screenshot}
                 alt={current.label}
                 className="w-full object-cover object-top"
-                style={{ maxHeight: '420px' }}
+                style={{ maxHeight: 'min(420px, 60vh)' }}
               />
             </div>
           </div>
