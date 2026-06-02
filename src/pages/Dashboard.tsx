@@ -10,6 +10,14 @@ import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
+import { useAuth } from '@/hooks/useAuth';
+
+function getGreeting(): string {
+  const h = new Date().getHours();
+  if (h < 12) return 'Bom dia';
+  if (h < 18) return 'Boa tarde';
+  return 'Boa noite';
+}
 
 function StatCard({ icon: Icon, label, value, variant = 'default', loading }: {
   icon: React.ElementType;
