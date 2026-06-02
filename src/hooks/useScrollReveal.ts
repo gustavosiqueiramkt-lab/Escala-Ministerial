@@ -14,8 +14,10 @@ export function useScrollReveal() {
       });
     };
 
-    // Reveal immediately on mount
-    revealElements();
+    // Reveal after render completes (requestAnimationFrame waits for paint, then timeout ensures DOM is ready)
+    requestAnimationFrame(() => {
+      setTimeout(revealElements, 0);
+    });
 
     // Reveal on scroll
     window.addEventListener('scroll', revealElements, { passive: true });
