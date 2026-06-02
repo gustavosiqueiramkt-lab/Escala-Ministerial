@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { CalendarView } from '@/components/ui/calendar-view';
-import { useServices, useDeleteService, Service } from '@/hooks/useServices';
+import { useServices, useDeleteService, useDuplicateService, Service } from '@/hooks/useServices';
 import { useSongs } from '@/hooks/useSongs';
 import { useOrganizationMembersWithSkills } from '@/hooks/useMemberSkills';
 import { useOrgRole } from '@/hooks/useOrgRole';
@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -20,7 +21,17 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
-import { Plus, Calendar, Music, Users, Clock, Pencil, Trash2, Loader2, Eye } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Plus, Calendar, Music, Users, Clock, Pencil, Trash2, Loader2, Eye, Copy } from 'lucide-react';
+import { addDays } from 'date-fns';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -34,6 +45,10 @@ interface DayServicesSheetProps {
   onServiceClick: (service: Service) => void;
   onCreateNew: () => void;
   isLeader: boolean;
+  onDuplicate: (service: Service) => void;
+  onDeleteClick: (service: Service) => void;
+  isDuplicating: boolean;
+  isDeleting: boolean;
 }
 
 function DayServicesSheet({
@@ -44,6 +59,10 @@ function DayServicesSheet({
   onServiceClick,
   onCreateNew,
   isLeader,
+  onDuplicate,
+  onDeleteClick,
+  isDuplicating,
+  isDeleting,
 }: DayServicesSheetProps) {
   const sortedServices = [...services].sort((a, b) => a.time.localeCompare(b.time));
 
@@ -58,9 +77,8 @@ function DayServicesSheet({
 
         <div className="space-y-3 mt-6">
           {sortedServices.map((service) => (
-            <button
+            <div
               key={service.id}
-              onClick={() => onServiceClick(service)}
               className={cn(
                 'w-full flex items-center justify-between p-4 rounded-lg border-2 text-left transition-all',
                 service.status === 'published'
@@ -68,7 +86,10 @@ function DayServicesSheet({
                   : 'border-warning/20 bg-warning/5 hover:border-warning/40 hover:bg-warning/10'
               )}
             >
-              <div className="flex-1">
+              <button
+                onClick={() => onServiceClick(service)}
+                className="flex-1 text-left"
+              >
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-muted-foreground" />
                   <span className="font-medium">{service.time}</span>
@@ -77,9 +98,55 @@ function DayServicesSheet({
                   </Badge>
                 </div>
                 <p className="text-sm text-muted-foreground mt-1">{service.title}</p>
+              </button>
+
+              <div className="flex items-center gap-2 ml-3 shrink-0">
+                {isLeader && (
+                  <>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDuplicate(service);
+                      }}
+                      disabled={isDuplicating}
+                      className="p-2 hover:bg-primary/10 rounded-md transition-colors text-primary disabled:opacity-50"
+                      title="Duplicar culto"
+                    >
+                      {isDuplicating ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeleteClick(service);
+                      }}
+                      disabled={isDeleting}
+                      className="p-2 hover:bg-destructive/10 rounded-md transition-colors text-destructive disabled:opacity-50"
+                      title="Excluir culto"
+                    >
+                      {isDeleting ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-4 w-4" />
+                      )}
+                    </button>
+                  </>
+                )}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onServiceClick(service);
+                  }}
+                  className="p-2 hover:bg-primary/10 rounded-md transition-colors text-primary"
+                  title="Ver detalhes"
+                >
+                  <Eye className="h-4 w-4" />
+                </button>
               </div>
-              <Eye className="h-4 w-4 text-primary ml-2 shrink-0" />
-            </button>
+            </div>
           ))}
         </div>
 
@@ -262,9 +329,18 @@ export default function Services() {
   const { data: services = [], isLoading } = useServices();
   const { isLeader } = useOrgRole();
   const deleteService = useDeleteService();
+  const duplicateService = useDuplicateService();
+
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [dayServicesOpen, setDayServicesOpen] = useState(false);
+
+  // Sheet actions states
+  const [serviceToDelete, setServiceToDelete] = useState<Service | null>(null);
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [isDuplicateDialogOpen, setIsDuplicateDialogOpen] = useState(false);
+  const [serviceToDuplicate, setServiceToDuplicate] = useState<Service | null>(null);
+  const [duplicateDate, setDuplicateDate] = useState('');
 
   const dayServices = selectedDay
     ? services.filter(s => isSameDateString(s.date, selectedDay))
@@ -315,6 +391,33 @@ export default function Services() {
     }
   };
 
+  const handleDuplicateInSheet = (service: Service) => {
+    setServiceToDuplicate(service);
+    setDuplicateDate(format(addDays(new Date(service.date), 7), 'yyyy-MM-dd'));
+    setIsDuplicateDialogOpen(true);
+  };
+
+  const handleConfirmDuplicate = () => {
+    if (serviceToDuplicate) {
+      duplicateService.mutate({ sourceId: serviceToDuplicate.id, newDate: duplicateDate });
+      setIsDuplicateDialogOpen(false);
+      setDayServicesOpen(false);
+    }
+  };
+
+  const handleDeleteInSheet = (service: Service) => {
+    setServiceToDelete(service);
+    setIsDeleteAlertOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (serviceToDelete) {
+      deleteService.mutate(serviceToDelete.id);
+      setIsDeleteAlertOpen(false);
+      setDayServicesOpen(false);
+    }
+  };
+
   return (
     <AppLayout title="Cultos">
       {/* Header - only show create button for leaders */}
@@ -351,6 +454,10 @@ export default function Services() {
           onServiceClick={handleServiceClick}
           onCreateNew={handleCreateNewInDay}
           isLeader={isLeader}
+          onDuplicate={handleDuplicateInSheet}
+          onDeleteClick={handleDeleteInSheet}
+          isDuplicating={duplicateService.isPending}
+          isDeleting={deleteService.isPending}
         />
       )}
 
@@ -373,6 +480,82 @@ export default function Services() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Duplicate Dialog - from Sheet */}
+      <Dialog open={isDuplicateDialogOpen} onOpenChange={setIsDuplicateDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Duplicar culto</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">Data do novo culto</label>
+              <input
+                type="date"
+                value={duplicateDate}
+                onChange={(e) => setDuplicateDate(e.target.value)}
+                className="w-full mt-2 px-3 py-2 border border-input rounded-md text-sm"
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-2 justify-end">
+            <Button
+              variant="outline"
+              onClick={() => setIsDuplicateDialogOpen(false)}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleConfirmDuplicate}
+              disabled={duplicateService.isPending}
+              className="gap-2"
+            >
+              {duplicateService.isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Duplicando...
+                </>
+              ) : (
+                <>
+                  <Copy className="h-4 w-4" />
+                  Duplicar
+                </>
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Alert - from Sheet */}
+      <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir culto</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este culto? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="flex gap-2 justify-end">
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={deleteService.isPending}
+            >
+              {deleteService.isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Excluindo...
+                </>
+              ) : (
+                'Excluir'
+              )}
+            </AlertDialogAction>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
     </AppLayout>
   );
 }
