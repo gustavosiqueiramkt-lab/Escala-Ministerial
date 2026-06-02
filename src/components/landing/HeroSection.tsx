@@ -4,17 +4,19 @@ import { ArrowRight } from 'lucide-react';
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center overflow-x-hidden bg-[#0f0a2e]">
+    <section className="relative min-h-screen flex items-center bg-[#0f0a2e]">
       {/* Mesh gradient layers */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#0f0a2e] via-[#1e1458] to-[#2d1fa3]" />
       <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-violet-600/10 to-indigo-400/20" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_hsl(263_80%_65%/0.2)_0%,_transparent_60%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_hsl(243_89%_40%/0.3)_0%,_transparent_60%)]" />
 
-      {/* Blur orbs */}
-      <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-violet-600/15 rounded-full blur-[120px]" />
-      <div className="absolute bottom-1/4 right-1/6 w-[400px] h-[400px] bg-indigo-500/10 rounded-full blur-[100px]" />
-      <div className="absolute top-1/4 right-1/3 w-64 h-64 bg-amber-500/5 rounded-full blur-[80px]" />
+      {/* Blur orbs — clipped to prevent overflow */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-violet-600/15 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/4 right-1/6 w-[400px] h-[400px] bg-indigo-500/10 rounded-full blur-[100px]" />
+        <div className="absolute top-1/4 right-1/3 w-64 h-64 bg-amber-500/5 rounded-full blur-[80px]" />
+      </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 pt-28 pb-32 grid lg:grid-cols-2 gap-12 items-center">
         {/* Text */}
