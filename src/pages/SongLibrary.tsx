@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { useSongs, useCreateSong, useUpdateSong, useDeleteSong, uploadSongPdf, Song } from '@/hooks/useSongs';
+import { useSongs, useCreateSong, useUpdateSong, useDeleteSong, uploadSongPdf, getSongPdfSignedUrl, Song } from '@/hooks/useSongs';
 import { useOrganization } from '@/hooks/useOrganization';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -274,14 +274,15 @@ export default function SongLibrary() {
                           </a>
                         )}
                         {song.pdf_url && (
-                          <a
-                            href={song.pdf_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <button
+                            onClick={async () => {
+                              const url = await getSongPdfSignedUrl(song.pdf_url!);
+                              if (url) window.open(url, '_blank');
+                            }}
                             className="p-2 rounded-lg hover:bg-secondary transition-colors"
                           >
                             <FileText className="h-4 w-4 text-primary" />
-                          </a>
+                          </button>
                         )}
                       </div>
                     </TableCell>
@@ -360,15 +361,16 @@ export default function SongLibrary() {
                       </a>
                     )}
                     {song.pdf_url && (
-                      <a
-                        href={song.pdf_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        onClick={async () => {
+                          const url = await getSongPdfSignedUrl(song.pdf_url!);
+                          if (url) window.open(url, '_blank');
+                        }}
                         className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                       >
                         <FileText className="h-4 w-4 text-primary" />
                         Cifra
-                      </a>
+                      </button>
                     )}
                   </div>
                 )}

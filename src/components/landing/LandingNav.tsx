@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { CantivoMark } from '@/components/brand/CantivoMark';
 
 export function LandingNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -24,7 +24,7 @@ export function LandingNav() {
       >
         <Link to="/" className="flex items-center gap-2 flex-shrink-0">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary">
-            <Sparkles className="h-4 w-4 text-white" />
+            <CantivoMark size={17} color="white" />
           </div>
           <span className="font-display font-bold text-foreground text-sm">Cantivo</span>
         </Link>

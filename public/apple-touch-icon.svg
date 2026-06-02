@@ -1,4 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
-  <rect width="180" height="180" rx="36" fill="#099bc0"/>
-  <text x="90" y="125" font-size="95" text-anchor="middle" font-family="system-ui">🎵</text>
+  <rect width="180" height="180" rx="40" fill="#4F46E5"/>
+  <svg x="54" y="38" width="72" height="104" viewBox="0 0 36 52">
+    <path d="M9 4L9 28Q9 40 18 40Q27 40 27 28L27 4" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <line x1="18" y1="40" x2="18" y2="49" stroke="white" stroke-width="5" stroke-linecap="round"/>
+  </svg>
 </svg>

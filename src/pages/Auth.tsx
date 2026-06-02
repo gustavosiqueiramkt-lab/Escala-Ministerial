@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Music } from 'lucide-react';
+import { CantivoMark } from '@/components/brand/CantivoMark';
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ export default function Auth() {
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-primary-foreground mb-4">
-            <Music className="h-8 w-8" />
+            <CantivoMark size={32} color="white" />
           </div>
           <h1 className="font-display text-2xl font-bold">Cantivo</h1>
           <p className="text-muted-foreground text-sm mt-1">A escala que sua equipe vai amar usar.</p>

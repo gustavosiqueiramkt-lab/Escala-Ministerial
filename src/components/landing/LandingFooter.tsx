@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Sparkles } from 'lucide-react';
+import { CantivoMark } from '@/components/brand/CantivoMark';
 
 export function LandingFooter() {
   return (
@@ -7,7 +7,7 @@ export function LandingFooter() {
       <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
         <Link to="/" className="flex items-center gap-2">
           <div className="flex h-6 w-6 items-center justify-center rounded-md bg-white/20">
-            <Sparkles className="h-3.5 w-3.5 text-white" />
+            <CantivoMark size={14} color="white" />
           </div>
           <span className="font-display font-bold text-white text-sm">Cantivo</span>
         </Link>

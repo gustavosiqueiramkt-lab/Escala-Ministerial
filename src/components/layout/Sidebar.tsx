@@ -10,9 +10,9 @@ import {
   UserCog,
   ChevronsUpDown,
   Check,
-  Sparkles,
   CreditCard
 } from 'lucide-react';
+import { CantivoMark } from '@/components/brand/CantivoMark';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -95,7 +95,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         ) : (
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 flex-shrink-0">
-              <Sparkles className="h-5 w-5 text-white" />
+              <CantivoMark size={22} color="white" />
             </div>
             {!collapsed && (
               <div className="animate-fade-in min-w-0">
