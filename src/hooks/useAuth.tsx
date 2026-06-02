@@ -68,6 +68,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw error;
     }
 
+    // Send welcome email via Supabase Function
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-welcome-email`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${data.session?.access_token || ''}`,
+          },
+          body: JSON.stringify({
+            email,
+            userName: name,
+            appUrl: `${window.location.origin}/dashboard`,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        console.error('Failed to send welcome email:', await response.text());
+        // Don't throw - email failure shouldn't block signup
+      }
+    } catch (emailError) {
+      console.error('Error sending welcome email:', emailError);
+      // Don't throw - email failure shouldn't block signup
+    }
+
     // Session null means email confirmation is required
     if (!data.session) {
       toast.info('Conta criada! Verifique seu e-mail e clique no link de confirmação para ativar sua conta.');
