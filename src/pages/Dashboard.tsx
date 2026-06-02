@@ -13,9 +13,9 @@ import { format } from 'date-fns';
 import { useAuth } from '@/hooks/useAuth';
 
 function getGreeting(): string {
-  const h = new Date().getHours();
-  if (h < 12) return 'Bom dia';
-  if (h < 18) return 'Boa tarde';
+  const hours = new Date().getHours();
+  if (hours < 12) return 'Bom dia';
+  if (hours < 18) return 'Boa tarde';
   return 'Boa noite';
 }
 
