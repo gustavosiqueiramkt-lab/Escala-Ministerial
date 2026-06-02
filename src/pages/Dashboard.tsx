@@ -19,6 +19,104 @@ function getGreeting(): string {
   return 'Boa noite';
 }
 
+function HeroBanner({
+  firstName,
+  nextService,
+  onNewService,
+  onTeam,
+}: {
+  firstName: string;
+  nextService: Service | null;
+  onNewService: () => void;
+  onTeam: () => void;
+}) {
+  const greeting = getGreeting();
+  const hoje = new Date().toLocaleDateString('pt-BR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  });
+
+  const nextDate = nextService
+    ? new Date(nextService.date).toLocaleDateString('pt-BR', {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+      })
+    : null;
+
+  return (
+    <div className="relative rounded-2xl overflow-hidden mb-8 bg-gradient-to-br from-violet-600 via-violet-700 to-indigo-800 p-6 lg:p-8 animate-slide-up">
+      {/* Decoração de brilho sutil no canto superior direito */}
+      <div
+        className="absolute inset-0 opacity-10 pointer-events-none"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle at 85% 15%, #ffffff 0%, transparent 55%)',
+        }}
+      />
+
+      <div className="relative flex flex-col lg:flex-row lg:items-center gap-6">
+        {/* Esquerda: saudação + subtítulo + botões */}
+        <div className="flex-1">
+          <p className="text-violet-200 text-xs font-semibold tracking-widest uppercase mb-2">
+            Equipe de Louvor
+          </p>
+          <h1 className="text-white text-3xl lg:text-4xl font-display font-bold mb-2 leading-tight">
+            {greeting}, {firstName}!
+          </h1>
+          <p className="text-violet-200 text-sm mb-6">
+            Sua equipe está pronta para louvar.
+          </p>
+          <div className="flex gap-3 flex-wrap">
+            <Button
+              onClick={onNewService}
+              className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg border-0"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Novo Culto
+            </Button>
+            <Button
+              onClick={onTeam}
+              variant="outline"
+              className="border-white/40 text-white hover:bg-white/10 bg-transparent backdrop-blur-sm"
+            >
+              <Users className="h-4 w-4 mr-2" />
+              Equipe
+            </Button>
+          </div>
+        </div>
+
+        {/* Direita: glass card com data + próximo culto */}
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-4 lg:p-5 min-w-[200px] shrink-0">
+          <p className="text-violet-200 text-xs font-semibold uppercase tracking-widest">
+            Hoje
+          </p>
+          <p className="text-white font-semibold mt-1 capitalize text-sm">{hoje}</p>
+
+          <div className="border-t border-white/20 my-3" />
+
+          <p className="text-violet-200 text-xs font-semibold uppercase tracking-widest">
+            Próximo Culto
+          </p>
+          {nextService ? (
+            <>
+              <p className="text-white font-semibold mt-1 text-sm leading-snug">
+                {nextService.title}
+              </p>
+              <p className="text-violet-200 text-xs mt-0.5 capitalize">
+                {nextDate} · {nextService.time}
+              </p>
+            </>
+          ) : (
+            <p className="text-violet-300 text-sm mt-1">Nenhum agendado</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function StatCard({ icon: Icon, label, value, variant = 'default', loading }: {
   icon: React.ElementType;
   label: string;
